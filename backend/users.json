@@ -24,5 +24,35 @@
     "bio": "React developer passionate about UI design.",
     "company": "Creative Labs",
     "website": "www.creativelabs.com"
-  }
+  },
+
+  {
+    "id": 4,
+    "name": "Patricia Lebsack",
+    "email": "Julianne.OConner@kory.org",
+    "role": "UI/UX Designer",
+    "bio": "Passionate about creating intuitive and engaging user experiences.",
+    "company": "Cognizant",
+    "website": "www.cognizant.com"
+
+  },
+  {
+    "id": 5,
+    "name": "Chelsey Dietrich",
+    "email": "Lucio_Hettinger@annie.ca",
+    "role": "Trainee Engineer",
+    "bio": "Passionate about building scalable web applications.",
+    "company": "IBM Solutions",
+    "website": "www.ibmsolutions.com"
+},
+   
+  {
+    "id": 6,
+    "name": "Mrs. Dennis Schulist",
+    "email": "Karley_Dach@jasper.info",
+    "role": "UI/UX Designer",
+    "bio": "Dedicated designer with a passion for creating beautiful interfaces.",
+    "company": "Tech Masters",
+    "website": "www.techmasters.com"
+}
 ]
