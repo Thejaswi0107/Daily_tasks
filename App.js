@@ -1,51 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import UserProfileCard from "./components/UserProfileCard";
+import DynamicUserCard from "./components/DynamicUserCard";
 import "./App.css";
 
 function App() {
-  const [users, setUsers] = useState([]);
-  const [currentUserIndex, setCurrentUserIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setUsers(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
-
-  const nextUser = () => {
-    setCurrentUserIndex((prevIndex) =>
-      prevIndex === users.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  if (loading) {
-    return <h2>Loading user data...</h2>;
-  }
-
-  if (error) {
-    return <h2>Error: {error}</h2>;
-  }
-
   return (
-    <div className="app">
-      <UserProfileCard user={users[currentUserIndex]} />
-      <button onClick={nextUser} className="switch-btn">
-        Next User
-      </button>
+    <div className="container">
+      <div className="left-section">
+        <UserProfileCard
+          profileImage="https://tse2.mm.bing.net/th/id/OIP.dM6PoYunQ2y5GXzWjWy7DwHaHa?pid=Api&P=0&h=180"
+          name="Thejaswi"
+          role="Associate Software Engineer"
+          location="Andhra Pradesh, India"
+          company=" Stackly "
+          bio="Passionate frontend developer learning React and building modern web applications."
+        />
+      </div>
+
+      <div className="right-section">
+        <DynamicUserCard />
+      </div>
     </div>
   );
 }

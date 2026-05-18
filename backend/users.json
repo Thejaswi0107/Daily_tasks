@@ -1,0 +1,28 @@
+[{
+    "id": 1,
+    "name": "Thejaswi",
+    "email": "thejaswi@gmail.com",
+    "role": "Associate Software Engineer",
+    "bio": "Passionate frontend developer learning React and building interactive web applications.",
+    "company": "stackly",
+    "website": "www.xyz.com"
+  },
+  {
+    "id": 2,
+    "name": "Rahul Sharma",
+    "email": "rahul@gmail.com",
+    "role": "Software Developer",
+    "bio": "Backend developer specializing in Python APIs.",
+    "company": "Tech Solutions",
+    "website": "www.techsolutions.com"
+  },
+  {
+    "id": 3,
+    "name": "Priya Reddy",
+    "email": "priya@gmail.com",
+    "role": "Frontend Engineer",
+    "bio": "React developer passionate about UI design.",
+    "company": "Creative Labs",
+    "website": "www.creativelabs.com"
+  }
+]

@@ -1,36 +1,30 @@
 import React, { useState } from "react";
 import "./UserProfileCard.css";
 
-function UserProfileCard({ user }) {
+function UserProfileCard({ profileImage, name, role, bio, company, location }) {
   const [isFollowing, setIsFollowing] = useState(false);
-
-  const handleFollowToggle = () => {
-    setIsFollowing(!isFollowing);
-  };
 
   return (
     <div className="card">
-      <img
-        src={`https://i.pravatar.cc/150?img=${user.id}`}
-        alt={user.name}
-        className="profile-image"
-      />
+      <img src={profileImage} alt={name} className="profile-image" />
 
-      <h2>{user.name}</h2>
+      <h2>{name}</h2>
+      <h4>{role}</h4>
 
-      <p>
-        <strong>Email:</strong> {user.email}
-      </p>
+      <p className="location">📍 {location}</p>
+      <p className="company">Company: {company}</p>
 
-      <p>
-        <strong>Company:</strong> {user.company.name}
-      </p>
+      <p>{bio}</p>
 
-      <p>
-        <strong>Website:</strong> {user.website}
-      </p>
+      <div className="skills">
+        <span>React</span>
+        <span>JavaScript</span>
+        <span>HTML</span>
+        <span>CSS</span>
+        <span>Python</span>
+      </div>
 
-      <button onClick={handleFollowToggle} className="follow-btn">
+      <button onClick={() => setIsFollowing(!isFollowing)}>
         {isFollowing ? "Following" : "Follow"}
       </button>
     </div>
