@@ -2,30 +2,53 @@ import React, { useEffect, useState } from "react";
 import "./UserProfileCard.css";
 
 function DynamicUserCard() {
+  const [users, setUsers] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [user, setUser] = useState(null);
-  const [userId, setUserId] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  
   useEffect(() => {
-    setLoading(true);
-
-    fetch(`http://127.0.0.1:5000/users/${userId}`)
+    fetch("http://127.0.0.1:5000/users")
       .then((response) => {
         if (!response.ok) {
-          throw new Error("User not found");
+          throw new Error("Failed to fetch users");
         }
         return response.json();
       })
       .then((data) => {
-        setUser(data);
+        setUsers(data);
+
+        if (data.length > 0) {
+          setUser(data[0]);
+        }
+
         setLoading(false);
       })
-      .catch((err) => {
-        setError(err.message);
+      .catch((error) => {
+        setError(error.message);
         setLoading(false);
       });
-  }, [userId]);
+  }, []);
+
+
+  const handleNext = () => {
+    if (users.length === 0) return;
+
+    const nextIndex = (currentIndex + 1) % users.length;
+    setCurrentIndex(nextIndex);
+    setUser(users[nextIndex]);
+  };
+
+  
+  const handlePrevious = () => {
+    if (users.length === 0) return;
+
+    const prevIndex = (currentIndex - 1 + users.length) % users.length;
+    setCurrentIndex(prevIndex);
+    setUser(users[prevIndex]);
+  };
 
   if (loading) return <div className="dynamic-card">Loading...</div>;
   if (error) return <div className="dynamic-card">{error}</div>;
@@ -46,6 +69,11 @@ function DynamicUserCard() {
         </div>
 
         <div className="detail-row">
+          <span className="label">Role:</span>
+          <span>{user.role}</span>
+        </div>
+
+        <div className="detail-row">
           <span className="label">Company:</span>
           <span>{user.company}</span>
         </div>
@@ -57,13 +85,8 @@ function DynamicUserCard() {
       </div>
 
       <div className="button-group">
-        <button onClick={() => setUserId(userId === 1 ? 3 : userId - 1)}>
-          Previous
-        </button>
-
-        <button onClick={() => setUserId(userId === 3 ? 1 : userId + 1)}>
-          Next
-        </button>
+        <button onClick={handlePrevious}>Previous</button>
+        <button onClick={handleNext}>Next</button>
       </div>
     </div>
   );

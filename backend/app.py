@@ -5,23 +5,19 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-# Load users from JSON file
 def load_users():
     with open("backend/users.json", "r") as file:
         return json.load(file)
-
-# Save users to JSON file
+    
 def save_users(users):
     with open("backend/users.json", "w") as file:
         json.dump(users, file, indent=4)
 
-# GET all users
 @app.route("/users", methods=["GET"])
 def get_users():
     users = load_users()
     return jsonify(users)
 
-# GET single user by ID
 @app.route("/users/<int:user_id>", methods=["GET"])
 def get_user(user_id):
     users = load_users()
@@ -33,7 +29,6 @@ def get_user(user_id):
 
     return jsonify({"error": "User not found"}), 404
 
-# POST new user
 @app.route("/users", methods=["POST"])
 def add_user():
     data = request.get_json()
