@@ -1,0 +1,68 @@
+.dashboard {
+  color: white;
+}
+
+.dashboard h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.user-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.user-form input,
+.user-form button,
+.filters input,
+.filters select {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+}
+
+.user-form button {
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+.filters {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.user-card {
+  background: white;
+  color: black;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.card-buttons {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.card-buttons button {
+  padding: 10px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.message {
+  color: yellow;
+}
