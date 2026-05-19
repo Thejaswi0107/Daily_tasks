@@ -1,130 +1,100 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, EmailStr
-import json
-
-app = FastAPI()
-
-# CORS for React frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from database import init_db
+from models import (
+    get_all_users,
+    get_user_by_id,
+    create_user,
+    update_user,
+    delete_user
 )
 
-# Validation model
-class User(BaseModel):
-    name: str
-    email: EmailStr
-    role: str
-    bio: str
-    company: str
-    website: str
+app = Flask(__name__)
+CORS(app)
 
-# Load JSON data
-def load_users():
-    with open("backend/users.json", "r") as file:
-        return json.load(file)
+init_db()
 
-# Save JSON data
-def save_users(users):
-    with open("backend/users.json", "w") as file:
-        json.dump(users, file, indent=4)
 
-# GET all users
-@app.get("/users")
-def get_users(search: str = None, role: str = None):
-    users = load_users()
+def validate_user(data):
+    required_fields = ["name", "email", "role"]
 
-    if search:
-        users = [
-            user for user in users
-            if search.lower() in user["name"].lower()
-        ]
+    for field in required_fields:
+        if field not in data or not data[field].strip():
+            return f"{field} is required"
 
-    if role:
-        users = [
-            user for user in users
-            if user["role"].lower() == role.lower()
-        ]
+    return None
 
-    return users
 
-# GET single user
-@app.get("/users/{user_id}")
-def get_user(user_id: int):
-    users = load_users()
+@app.route("/users", methods=["GET"])
+def fetch_users():
+    users = get_all_users()
+    return jsonify(users), 200
 
-    user = next((u for u in users if u["id"] == user_id), None)
+
+@app.route("/users/<int:user_id>", methods=["GET"])
+def fetch_user(user_id):
+    user = get_user_by_id(user_id)
 
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        return jsonify({"error": "User not found"}), 404
 
-    return user
+    return jsonify(user), 200
 
-# POST add user
-@app.post("/users")
-def add_user(user: User):
-    users = load_users()
 
-    new_user = {
-        "id": len(users) + 1,
-        "name": user.name,
-        "email": user.email,
-        "role": user.role,
-        "bio": user.bio,
-        "company": user.company,
-        "website": user.website
-    }
+@app.route("/users", methods=["POST"])
+def add_user():
+    try:
+        data = request.json
 
-    users.append(new_user)
-    save_users(users)
+        error = validate_user(data)
+        if error:
+            return jsonify({"error": error}), 400
 
-    return {
-        "message": "User added successfully",
-        "user": new_user
-    }
+        user = create_user(data)
+        return jsonify(user), 201
 
-# PUT update user
-@app.put("/users/{user_id}")
-def update_user(user_id: int, updated_user: User):
-    users = load_users()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-    for index, user in enumerate(users):
-        if user["id"] == user_id:
-            users[index] = {
-                "id": user_id,
-                "name": updated_user.name,
-                "email": updated_user.email,
-                "role": updated_user.role,
-                "bio": updated_user.bio,
-                "company": updated_user.company,
-                "website": updated_user.website
-            }
 
-            save_users(users)
+@app.route("/users/<int:user_id>", methods=["PUT"])
+def edit_user(user_id):
+    try:
+        existing_user = get_user_by_id(user_id)
 
-            return {
-                "message": "User updated successfully",
-                "user": users[index]
-            }
+        if not existing_user:
+            return jsonify({"error": "User not found"}), 404
 
-    raise HTTPException(status_code=404, detail="User not found")
+        data = request.json
 
-# DELETE user
-@app.delete("/users/{user_id}")
-def delete_user(user_id: int):
-    users = load_users()
+        error = validate_user(data)
+        if error:
+            return jsonify({"error": error}), 400
 
-    user = next((u for u in users if u["id"] == user_id), None)
+        updated_user = update_user(user_id, data)
+        return jsonify(updated_user), 200
 
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-    users = [u for u in users if u["id"] != user_id]
 
-    save_users(users)
+@app.route("/users/<int:user_id>", methods=["DELETE"])
+def remove_user(user_id):
+    try:
+        existing_user = get_user_by_id(user_id)
 
-    return {"message": "User deleted successfully"}
+        if not existing_user:
+            return jsonify({"error": "User not found"}), 404
+
+        delete_user(user_id)
+
+        return jsonify({
+            "message": "User deleted successfully"
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

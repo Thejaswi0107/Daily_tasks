@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function UserForm({ fetchUsers, editingUser, setEditingUser, setMessage }) {
+function UserForm({ addUser, updateUser, editingUser }) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -9,8 +9,6 @@ function UserForm({ fetchUsers, editingUser, setEditingUser, setMessage }) {
     company: "",
     website: "",
   });
-
-  const API_URL = "http://127.0.0.1:8000/users";
 
   useEffect(() => {
     if (editingUser) {
@@ -25,30 +23,13 @@ function UserForm({ fetchUsers, editingUser, setEditingUser, setMessage }) {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (editingUser) {
-      await fetch(`${API_URL}/${editingUser.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      setMessage("User updated successfully");
-      setEditingUser(null);
+      updateUser(formData);
     } else {
-      await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      setMessage("User added successfully");
+      addUser(formData);
     }
 
     setFormData({
@@ -59,18 +40,54 @@ function UserForm({ fetchUsers, editingUser, setEditingUser, setMessage }) {
       company: "",
       website: "",
     });
-
-    fetchUsers();
   };
 
   return (
-    <form className="user-form" onSubmit={handleSubmit}>
-      <input name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
-      <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-      <input name="role" placeholder="Role" value={formData.role} onChange={handleChange} required />
-      <input name="bio" placeholder="Bio" value={formData.bio} onChange={handleChange} required />
-      <input name="company" placeholder="Company" value={formData.company} onChange={handleChange} required />
-      <input name="website" placeholder="Website" value={formData.website} onChange={handleChange} required />
+    <form onSubmit={handleSubmit} className="user-form">
+      <input
+        name="name"
+        placeholder="Name"
+        value={formData.name}
+        onChange={handleChange}
+        required
+      />
+
+      <input
+        name="email"
+        placeholder="Email"
+        value={formData.email}
+        onChange={handleChange}
+        required
+      />
+
+      <input
+        name="role"
+        placeholder="Role"
+        value={formData.role}
+        onChange={handleChange}
+        required
+      />
+
+      <input
+        name="bio"
+        placeholder="Bio"
+        value={formData.bio}
+        onChange={handleChange}
+      />
+
+      <input
+        name="company"
+        placeholder="Company"
+        value={formData.company}
+        onChange={handleChange}
+      />
+
+      <input
+        name="website"
+        placeholder="Website"
+        value={formData.website}
+        onChange={handleChange}
+      />
 
       <button type="submit">
         {editingUser ? "Update User" : "Add User"}
