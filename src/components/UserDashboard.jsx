@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import UserCard from "./UserCard";
 import UserForm from "./UserForm";
-import "./Dashboard.css";
+import "./styles/Dashboard.css";
 
 function UserDashboard() {
   const [users, setUsers] = useState([]);

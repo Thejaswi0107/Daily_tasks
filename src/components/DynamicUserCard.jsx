@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./UserProfileCard.css";
+import "./styles/UserProfileCard.css";
 
 function DynamicUserCard() {
   const [users, setUsers] = useState([]);
